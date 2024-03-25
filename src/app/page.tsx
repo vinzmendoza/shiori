@@ -1,39 +1,23 @@
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Search } from "lucide-react";
-import BookmarkList from "@/components/bookmark-list";
-import SignOut from "./(auth)/sign-out";
 
 export default async function Home() {
   const supabase = createClient();
 
   const { data, error } = await supabase.auth.getUser();
 
-  if (!data || error) {
-    redirect('/login')
+  if (data.user !== null) {
+    redirect('/category/general')
   }
 
   return (
     <main className="container max-w-2xl py-12">
-      <span className="flex justify-between mb-4"><p>Logged in as {data.user?.email}</p>
-        <SignOut /></span>
-
-      <div className="flex flex-col gap-4">
-        <div className="relative w-full">
-          <Input type="text" placeholder="Enter a URL" className="pl-9" />
-          <Search className="absolute left-0 top-0 m-2.5 h-4 w-4 text-muted-foreground" />
-        </div>
-        <div>
-          <div className="flex justify-between">
-            <p className="text-sm">Title</p>
-            <p className="text-sm">Created at</p>
-          </div>
-          <Separator className="my-2" />
-          <BookmarkList />
-        </div>
-      </div>
+      <span className="flex justify-between mb-4">
+        <h1>Homepage for Shiori</h1>
+        <Link href="/login" className="font-bold hover:text-neutral-600">Sign in</Link>
+      </span>
+      <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Pariatur sint ex error ad adipisci mollitia ratione perspiciatis assumenda eos aperiam expedita, aut, fugiat dolorum at praesentium a velit, tenetur alias.</p>
     </main>
   );
 }
