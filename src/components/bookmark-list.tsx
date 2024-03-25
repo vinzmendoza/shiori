@@ -2,16 +2,40 @@
 
 import React from 'react'
 import { Button } from './ui/button'
+import { PostgrestError } from '@supabase/supabase-js';
 
-function List() {
+type ListProps = {
+    bookmarks: Bookmarks[] | null;
+    bookmarksError: PostgrestError | null;
+}
+
+
+function List({ bookmarks, bookmarksError }: ListProps) {
     const clicked = () => {
         console.log('clicked');
     }
 
+    if (bookmarksError) return <p>Sorry something went wrong.</p>
+
+    if ((bookmarks?.length && bookmarks?.length === 0) === 0) {
+        return <p className="text-sm">No bookmarks yet.</p>
+    }
+
     return (
         <ul>
-            <Button className="w-full bg-transparent text-neutral-900 hover:bg-neutral-100 shadow-none justify-start" onClick={clicked}>Url Here</Button>
-            <Button className="w-full bg-transparent text-neutral-900 hover:bg-neutral-100 shadow-none justify-start">Url Here</Button>
+            {
+                bookmarks?.map(bookmark => (
+                    <Button
+                        key={bookmark.id}
+                        className="w-full bg-transparent text-neutral-900 hover:bg-neutral-100 shadow-none justify-start"
+                        onClick={clicked}
+                    >
+                        {bookmark.url}
+                    </Button>)
+                )
+            }
+
+
         </ul>
     )
 }
